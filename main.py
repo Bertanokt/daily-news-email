@@ -1,12 +1,19 @@
 import requests
+from send_email import send_email
 
 API_KEY= "635a70c8b1e1402daa3116a4aeecdd89"
 url = "https://newsapi.org/v2/everything?q=apple&from=2026-04-12&to=2026-04-12&sortBy=popularity&apiKey=635a70c8b1e1402daa3116a4aeecdd89"
 #Make request
 request = requests.get(url)
+
 # Get a dictionary with a data
 content = request.json()
+
 #Access the article titles and description
+body = ""
 for article in content["articles"]:
-    print(article["title"])
-    print(article["description"])
+    if article["title"] is not None:
+       body = body + article["title"] + "\n" + article["description"] + 2*"\n"
+
+body = body.encode("utf-8")
+send_email(message=body)
