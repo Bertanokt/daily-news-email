@@ -4,7 +4,7 @@ from datetime import datetime
 
 today = datetime.now().strftime("%Y-%m-%d")
 
-topic = ("apple")
+topic = ("Turkey")
 API_KEY= "635a70c8b1e1402daa3116a4aeecdd89"
 
 url = ("https://newsapi.org/v2/everything?" 
