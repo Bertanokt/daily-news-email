@@ -1,26 +1,33 @@
 import requests
 from send_email import send_email
-topic = ("apple")
+from datetime import datetime
+
+today = datetime.now().strftime("%Y-%m-%d")
+
+topic = ("Turkey")
 API_KEY= "635a70c8b1e1402daa3116a4aeecdd89"
 
 url = ("https://newsapi.org/v2/everything?" 
       f"q={topic}&"
-       "from=2026-04-12&"
+       f"from={today}"
       "to=2026-04-15&sortBy=popularity&"
       "apiKey=635a70c8b1e1402daa3116a4aeecdd89&"
       "language=en")
 
 #Make request
-request = requests.get(url)
+response = requests.get(url)
 
 # Get a dictionary with a data
-content = request.json()
+content = response.json()
 
 #Access the article titles and description
-body = ""
+body = "Subject: Today's news\n\n"
 for article in content["articles"][:20]:
     if article["title"] is not None:
-       body = "Subject: Today's news"+ "\n" + body + article["title"] + "\n" + article["description"] + "\n" + article["url"] + 2*"\n"
+        body += article["title"] + "\n"
+        body += (article["description"] or "") + "\n"
+        body += article["url"] + "\n\n"
+
 
 body = body.encode("utf-8")
 send_email(message=body)
