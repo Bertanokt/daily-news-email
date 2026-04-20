@@ -1,39 +1,33 @@
 import requests
 from send_email import send_email
-from datetime import datetime, timedelta
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
+from datetime import datetime
 
 today = datetime.now().strftime("%Y-%m-%d")
-yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-topic = "Turkey"
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+topic = ("Turkey")
+API_KEY= "635a70c8b1e1402daa3116a4aeecdd89"
 
 url = ("https://newsapi.org/v2/everything?" 
-       f"q={topic}&"
-       f"from={yesterday}&"
-       f"to={today}&"
-       "sortBy=popularity&"
-       f"apiKey={NEWS_API_KEY}&"
-       "language=en")
+      f"qintitle={topic}&"
+       f"from={today}"
+      "to=2026-04-15&sortBy=popularity&"
+      "apiKey=635a70c8b1e1402daa3116a4aeecdd89&"
+      "language=en")
 
+#Make request
 response = requests.get(url)
+
+# Get a dictionary with a data
 content = response.json()
 
-if content.get("totalResults", 0) == 0:
-    print("Haber bulunamadı")
-    exit()
+#Access the article titles and description
+body = "Subject: Today's news\n\n"
+for article in content["articles"][:20]:
+    if article["title"] is not None:
+        body += article["title"] + "\n"
+        body += (article["description"] or "") + "\n"
+        body += article["url"] + "\n\n"
 
-articles = content["articles"][:10]
-
-body = "Subject: Today's Turkey News\n\n"
-for article in articles:
-    body += f"• {article['title']}\n"
-    body += f"  {article['description'] or ''}\n"
-    body += f"  {article['url']}\n\n"
 
 body = body.encode("utf-8")
-send_email(message=body
+send_email(message=body)
