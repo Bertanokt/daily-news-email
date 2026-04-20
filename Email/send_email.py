@@ -1,12 +1,13 @@
 import smtplib, ssl
-
+from dotenv import load_dotenv
+import os
 
 def send_email(message):
     host = "smtp.gmail.com"
     port = 465
 
     username = "bertan.okt34@gmail.com"
-    password = "bhioegixfbxskvgv"
+    password = os.getenv("GMAIL_APP_PASSWORD")
 
     receiver = "bertan.okt34@gmail.com"
     context = ssl.create_default_context()
